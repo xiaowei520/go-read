@@ -523,7 +523,10 @@ func cpuinit() {
 //	call runtime·mstart
 //
 // The new G calls runtime·main.
+
+//全局调度器的初始化
 func schedinit() {
+
 	// raceinit must be the first call to race detector.
 	// In particular, it must be done before mallocinit below calls racemapshadow.
 	_g_ := getg()
@@ -531,6 +534,7 @@ func schedinit() {
 		_g_.racectx, raceprocctx0 = raceinit()
 	}
 
+	// 设置 m的最大上限数量为10000 个。包含die 的
 	sched.maxmcount = 10000
 
 	tracebackinit()
