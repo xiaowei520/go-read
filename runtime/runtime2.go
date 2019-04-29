@@ -411,7 +411,13 @@ type g struct {
 }
 
 type m struct {
+
+	//带有调度堆栈的Goroutine、
+	//普通的Goroutine栈是在Heap分配的可增长的stack,而g0的stack是M对应的线程栈。
+	//调度会先切换到g0的栈再执行
 	g0      *g     // goroutine with scheduling stack
+
+	//gobuf 执行时数据结构
 	morebuf gobuf  // gobuf arg to morestack
 	divmod  uint32 // div/mod denominator for arm - known to liblink
 
@@ -421,8 +427,11 @@ type m struct {
 	goSigStack    gsignalStack // Go-allocated signal handling stack
 	sigmask       sigset       // storage for saved signal mask
 	tls           [6]uintptr   // thread-local storage (for x86 extern register)
+	//Go func 的函数
 	mstartfn      func()
+	//正在运行的G
 	curg          *g       // current running goroutine
+	//G 运行期间的 错误信号
 	caughtsig     guintptr // goroutine running during fatal signal
 	p             puintptr // attached p for executing go code (nil if not executing go code)
 	nextp         puintptr
